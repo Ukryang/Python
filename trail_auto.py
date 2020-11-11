@@ -1,7 +1,15 @@
-import selenium
+import telegram
 from selenium import webdriver
 import getpass
 import time
+
+def telegram_config():
+    my_token = "1461046500:AAFHgxklEQch_ANMZnF8T_WWCivwrW3AQLo"
+    bot = telegram.Bot(token=my_token)  # bot을 선언합니다.
+    updates = bot.getUpdates()  # 업데이트 내역을 받아옵니다.
+
+    for u in updates:  # 내역중 메세지를 출력합니다.
+        print(u.message)
 
 def selenium_driver():
     options = webdriver.ChromeOptions()
@@ -25,7 +33,27 @@ def get_password():
 
     return pw
 
+def train_reservation(start, tr_length):
+    while start < tr_length:
+        try:
+            while True:
+                # 좌석매진(Alt 값), 예약하기(Alt 값)
+                text = driver.find_element_by_xpath("//tbody/tr[{}]/td[6]//img".format(start)).get_attribute('alt')
+
+                if text == "예약하기":
+                    driver.find_element_by_xpath("//tbody/tr[{}]/td[6]//img".format(start)).click()
+                    telegram_config()
+                    break
+
+                if start == tr_length - 1:
+                    start = 1
+                    driver.refresh()
+        except:
+            break
+
 if __name__ == "__main__":
+
+    i = 0
 
     id = get_id()
     password = get_password()
@@ -48,13 +76,18 @@ if __name__ == "__main__":
     driver.find_element_by_id('txtPwd').send_keys(password)
     driver.find_element_by_xpath('//*[@id="loginDisplay1"]/ul/li[3]/a/img').click()
 
-    print(driver.window_handles)
+    popup_count = len(driver.window_handles)
+    i = popup_count
+
     # 팝업창 제거
-    driver.switch_to.window(driver.window_handles[2])
-    driver.close()
-    driver.switch_to.window(driver.window_handles[1])
-    driver.close()
-    driver.switch_to.window(driver.window_handles[0])
+    while i > 0:
+        if i == 1:
+            driver.switch_to.window(driver.window_handles[i-1])
+            break
+        else:
+            driver.switch_to.window(driver.window_handles[i-1])
+            driver.close()
+            i -= 1
 
     driver.find_element_by_xpath('//*[@id="txtGoStart"]').clear()
     driver.find_element_by_xpath('//*[@id="txtGoStart"]').send_keys(start_point)
@@ -63,7 +96,6 @@ if __name__ == "__main__":
     driver.find_element_by_xpath('//*[@id="txtGoEnd"]').send_keys(end_point)
 
     driver.find_element_by_xpath('//*[@id="res_cont_tab01"]/form/div/fieldset/ul[2]/li[1]/a/img').click()
-    print(driver.window_handles)
 
     driver.switch_to.window(driver.window_handles[1])
     driver.find_element_by_id("d{}".format(start_date)).click()
@@ -71,16 +103,8 @@ if __name__ == "__main__":
 
     driver.implicitly_wait(1)
     driver.find_element_by_xpath('//*[@id="res_cont_tab01"]/form/div/fieldset/p/a/img').click()
+    driver.implicitly_wait(3)
 
-    driver.find_element_by_name('btnRsv1_1').click()
-    driver.implicitly_wait(1)
-    driver.find_element_by_xpath('//*[@id="btn_next"]').click()
+    tr_length = len(driver.find_elements_by_xpath("//tbody//tr"))
+    train_reservation(1, tr_length)
 
-    # while count < 10:
-    #     try:
-    #         driver.find_element_by_name('btnRsv1_1').click()
-    #         driver.find_elements_by_tag_name()
-    #         driver.implicitly_wait(1)
-    #         driver.find_element_by_xpath('//*[@id="btn_next"]').click()
-    #
-    #     count = count + 1
