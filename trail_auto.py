@@ -15,7 +15,7 @@ def selenium_driver():
     options = webdriver.ChromeOptions()
     options.add_argument('windows-size=1920*1080')
 
-    driver = webdriver.Chrome('D:\Python\chromedriver.exe')
+    driver = webdriver.Chrome('chromedriver.exe')
 
     return driver
 
@@ -28,8 +28,7 @@ def get_id():
 
 def get_password():
 
-    #pw = getpass.getpass('PW: ')
-    pw = "solitude753!"
+    pw = getpass.getpass('PW: ')
 
     return pw
 
@@ -65,9 +64,6 @@ if __name__ == "__main__":
     url = 'http://www.letskorail.com/korail/com/login.do'
 
     driver = selenium_driver()
-
-    #day = input("날짜 입력: ")
-    #time = input("시간 입력: ")
 
     driver.get(url)
 
