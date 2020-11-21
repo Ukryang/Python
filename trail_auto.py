@@ -21,15 +21,13 @@ def selenium_driver():
 
 def get_id():
 
-    #id = input('ID: ')
-    id = "1765442377"
+    id = input('ID: ')
 
     return id
 
 def get_password():
 
-    #pw = getpass.getpass('PW: ')
-    pw = "solitude753!"
+    pw = getpass.getpass('PW: ')
 
     return pw
 
