@@ -2,12 +2,10 @@ import getpass
 
 # Get id
 def id():
-    #id = input('ID: ')
-    id = "ukryang@gmail.com"
+    id = input('ID: ')
     return id
 
 # Get Password
 def password():
-    #pw = getpass.getpass('PW: ')
-    pw = "dnldnrfid1!"
+    pw = getpass.getpass('PW: ')
     return pw
