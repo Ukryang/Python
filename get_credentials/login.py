@@ -8,6 +8,5 @@ def id():
 
 # Get Password
 def password():
-    #pw = getpass.getpass('PW: ')
-    pw = "dnldnrfid1!"
+    pw = getpass.getpass('PW: ')
     return pw
